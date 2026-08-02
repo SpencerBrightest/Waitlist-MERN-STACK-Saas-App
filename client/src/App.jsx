@@ -3,6 +3,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './context/AuthContext'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
+import Navbar from './components/Navbar'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import WaitlistPage from './pages/WaitlistPage'
@@ -15,6 +16,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Navbar />
         <Routes>
           <Route path='/' element={<Landing />} />
           <Route path='/login' element={<Login />} />
