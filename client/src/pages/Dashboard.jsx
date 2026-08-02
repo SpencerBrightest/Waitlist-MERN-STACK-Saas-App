@@ -15,20 +15,20 @@ export default function Dashboard() {
   const { user } = useAuth()
   const navigate = useNavigate()
 
-  const loadWaitlists = async () => {
-    setLoading(true)
-    setError('')
+  // const loadWaitlists = async () => {
+  //   setLoading(true)
+  //   setError('')
 
-    try {
-      const response = await axios.get('/waitlists')
-      const data = response.data?.waitlists || response.data || []
-      setWaitlists(Array.isArray(data) ? data : [])
-    } catch (err) {
-      setError(err?.response?.data?.message || 'Unable to load waitlists right now.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  //   try {
+  //     const response = await axios.get('/waitlists')
+  //     const data = response.data?.waitlists || response.data || []
+  //     setWaitlists(Array.isArray(data) ? data : [])
+  //   } catch (err) {
+  //     setError(err?.response?.data?.message || 'Unable to load waitlists right now.')
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   useEffect(() => {
     let active = true

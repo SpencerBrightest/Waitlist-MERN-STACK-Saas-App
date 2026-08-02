@@ -26,33 +26,51 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  // Normal user login
   const login = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData))
     setUser(userData)
   }
 
+  // Normal user logout
   const logout = () => {
     localStorage.removeItem('user')
     setUser(null)
   }
 
+  // Admin login
   const adminLogin = (adminData) => {
     localStorage.setItem('admin', JSON.stringify(adminData))
     setAdmin(adminData)
   }
 
+  // Admin logout
   const adminLogout = () => {
     localStorage.removeItem('admin')
     setAdmin(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, admin, setAdmin, loading, login, logout, adminLogin, adminLogout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        admin,
+        setAdmin,
+        loading,
+        login,
+        logout,
+        adminLogin,
+        adminLogout
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
 }
 
+// Default export
 export default function useAuth() {
   return useContext(AuthContext)
 }
+
