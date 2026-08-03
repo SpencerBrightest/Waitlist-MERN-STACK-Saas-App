@@ -9,18 +9,20 @@ import {
   deleteAdminWaitlistFallback
 } from '../utils/fallbackStore.js'
 
-const adminEmail = process.env.ADMIN_EMAIL || 'admin@waitlist.com'
-const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
-
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body
+    const expectedEmail = (process.env.ADMIN_EMAIL || 'admin@waitlist.com').trim().toLowerCase()
+    const expectedPassword = process.env.ADMIN_PASSWORD || 'admin123'
 
-    if (email !== adminEmail || password !== adminPassword) {
+    const inputEmail = (email || '').trim().toLowerCase()
+    const inputPassword = password || ''
+
+    if (inputEmail !== expectedEmail || inputPassword !== expectedPassword) {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
 
-    const token = jwt.sign({ role: 'admin', email }, process.env.ADMIN_JWT_SECRET || 'admin-secret', {
+    const token = jwt.sign({ role: 'admin', email: inputEmail }, process.env.ADMIN_JWT_SECRET || 'admin-secret', {
       expiresIn: '8h'
     })
 

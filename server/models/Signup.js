@@ -14,6 +14,18 @@ const signupSchema = new mongoose.Schema({
   name: {
     type: String,
     default: ''
+  },
+  verificationCode: {
+    type: String,
+    required: true
+  },
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  codeExpiresAt: {
+    type: Date,
+    required: true
   }
 }, { timestamps: true })
 
