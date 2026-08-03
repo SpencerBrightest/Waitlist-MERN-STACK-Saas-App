@@ -28,7 +28,7 @@ export default function Landing() {
           <br className='hidden sm:inline' />
           {' '}starts with a{' '}
           <br className='hidden sm:inline' />
-          <span className='bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent'>waitlist</span>
+          <span className='bg-linear-to-r from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent'>waitlist</span>
         </h1>
 
         {/* Subtext */}

@@ -1,30 +1,22 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
+import { AuthContext } from './authContext'
 
-const AuthContext = createContext(null)
+const getStoredAuth = (key) => {
+  if (typeof window === 'undefined') return null
+
+  try {
+    const value = window.localStorage.getItem(key)
+    return value ? JSON.parse(value) : null
+  } catch (error) {
+    console.error(`Failed to read ${key} from storage`, error)
+    return null
+  }
+}
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [admin, setAdmin] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    try {
-      const savedUser = localStorage.getItem('user')
-      const savedAdmin = localStorage.getItem('admin')
-
-      if (savedUser) {
-        setUser(JSON.parse(savedUser))
-      }
-
-      if (savedAdmin) {
-        setAdmin(JSON.parse(savedAdmin))
-      }
-    } catch (error) {
-      console.error('Failed to restore auth state', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const [user, setUser] = useState(() => getStoredAuth('user'))
+  const [admin, setAdmin] = useState(() => getStoredAuth('admin'))
+  const [loading] = useState(false)
 
   // Normal user login
   const login = (userData) => {
@@ -50,27 +42,19 @@ export function AuthProvider({ children }) {
     setAdmin(null)
   }
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-        admin,
-        setAdmin,
-        loading,
-        login,
-        logout,
-        adminLogin,
-        adminLogout
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  )
+  const value = useMemo(() => ({
+    user,
+    setUser,
+    admin,
+    setAdmin,
+    loading,
+    login,
+    logout,
+    adminLogin,
+    adminLogout
+  }), [admin, loading, user])
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-// Default export
-export default function useAuth() {
-  return useContext(AuthContext)
-}
-
+export default AuthProvider

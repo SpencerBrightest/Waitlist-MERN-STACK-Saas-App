@@ -1,8 +1,7 @@
 // server/config/db.js
 import mongoose from 'mongoose'
 
-// Disable command buffering — operations fail immediately if not connected
-// instead of hanging for 10s with "buffering timed out"
+
 mongoose.set('bufferCommands', false)
 
 const connectDB = async () => {

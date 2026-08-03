@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from '../api/axios'
 import Navbar from '../components/Navbar'
 import WaitlistCard from '../components/WaitlistCard'
-import useAuth from '../context/AuthContext'
+import useAuth from '../hooks/useAuth'
 
 export default function Dashboard() {
   const [waitlists, setWaitlists] = useState([])

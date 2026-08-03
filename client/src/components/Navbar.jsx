@@ -1,21 +1,28 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import useAuth from '../context/AuthContext'
+import useAuth from '../hooks/useAuth'
 
 export default function Navbar() {
-  const { user, logout } = useAuth()
+  const { user, admin, logout, adminLogout } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const activeAuth = user || admin
+
   const handleLogout = () => {
-    logout()
-    navigate('/')
+    if (admin) {
+      adminLogout()
+      navigate('/admin/login')
+    } else {
+      logout()
+      navigate('/')
+    }
   }
 
   return (
     <nav className='sticky top-0 z-50 border-b border-gray-100/80 bg-white/90 backdrop-blur-md px-4 py-3.5 sm:px-6 lg:px-8'>
       <div className='mx-auto flex max-w-7xl items-center justify-between'>
-        <Link to={user ? '/dashboard' : '/'} className='flex items-center gap-2.5 group'>
+        <Link to={admin ? '/admin/dashboard' : user ? '/dashboard' : '/'} className='flex items-center gap-2.5 group'>
           <div className='flex h-8 w-8 items-center justify-center rounded-full bg-black shadow-sm group-hover:scale-105 transition-transform'>
             <span className='text-xs font-bold text-white tracking-wider'>W</span>
           </div>
@@ -24,13 +31,13 @@ export default function Navbar() {
 
         {/* Desktop / Large Screen Navigation */}
         <div className='hidden lg:flex items-center gap-6'>
-          {user ? (
+          {activeAuth ? (
             <>
-              <Link to='/dashboard' className='text-sm font-medium text-gray-600 hover:text-gray-900 transition'>
+              <Link to={admin ? '/admin/dashboard' : '/dashboard'} className='text-sm font-medium text-gray-600 hover:text-gray-900 transition'>
                 Dashboard
               </Link>
               <span className='text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full'>
-                {user.name || user.email}
+                {admin ? `Admin: ${admin.email}` : user?.name || user?.email}
               </span>
               <button
                 type='button'
@@ -79,14 +86,14 @@ export default function Navbar() {
       {/* Mobile & Medium Device Drawer Menu */}
       {menuOpen && (
         <div className='lg:hidden mt-3 border-t border-gray-100 pt-4 pb-3 space-y-3 px-2 bg-white rounded-2xl shadow-lg border animate-in fade-in slide-in-from-top-2 duration-200'>
-          {user ? (
+          {activeAuth ? (
             <>
               <div className='px-3 py-2 border-b border-gray-100'>
                 <p className='text-xs font-semibold text-gray-400 uppercase tracking-wider'>Logged in as</p>
-                <p className='text-sm font-medium text-gray-900 truncate'>{user.name || user.email}</p>
+                <p className='text-sm font-medium text-gray-900 truncate'>{admin ? admin.email : user?.name || user?.email}</p>
               </div>
               <Link
-                to='/dashboard'
+                to={admin ? '/admin/dashboard' : '/dashboard'}
                 onClick={() => setMenuOpen(false)}
                 className='block px-3 py-2 rounded-xl text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900'
               >
@@ -125,4 +132,4 @@ export default function Navbar() {
       )}
     </nav>
   )
-}
+}
