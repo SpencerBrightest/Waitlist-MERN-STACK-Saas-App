@@ -18,13 +18,19 @@ export const joinWaitlist = async (req, res) => {
     // Find the waitlist
     let waitlist
     try {
-      waitlist = await Waitlist.findOne({ slug })
+      if (slug === 'default') {
+        // When no specific slug is provided (e.g. from Landing page /join),
+        // use the most recently created waitlist
+        waitlist = await Waitlist.findOne({}).sort({ createdAt: -1 })
+      } else {
+        waitlist = await Waitlist.findOne({ slug })
+      }
     } catch (dbError) {
       waitlist = getWaitlistBySlugFallback(slug)
     }
 
     if (!waitlist) {
-      return res.status(404).json({ message: 'Waitlist not found' })
+      return res.status(404).json({ message: 'Waitlist not found. Please create a waitlist first from the dashboard.' })
     }
 
     // Generate 6-digit verification code

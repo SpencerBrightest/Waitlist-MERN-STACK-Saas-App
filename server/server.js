@@ -7,6 +7,8 @@ import waitlistRoutes from './routes/waitlistRoutes.js'
 import signupRoutes from './routes/signupRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
+import dns from 'node:dns/promises';
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 dotenv.config()
 connectDB()

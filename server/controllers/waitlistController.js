@@ -80,13 +80,17 @@ export const getWaitlistBySlug = async (req, res) => {
     let waitlist
 
     try {
-      waitlist = await Waitlist.findOne({ slug: req.params.slug })
+      if (req.params.slug === 'default') {
+        waitlist = await Waitlist.findOne({}).sort({ createdAt: -1 })
+      } else {
+        waitlist = await Waitlist.findOne({ slug: req.params.slug })
+      }
     } catch (dbError) {
       waitlist = getWaitlistBySlugFallback(req.params.slug)
     }
 
     if (!waitlist) {
-      return res.status(404).json({ message: 'Waitlist not found' })
+      return res.status(404).json({ message: 'Waitlist not found. Please create a waitlist first from the dashboard.' })
     }
 
     res.json(waitlist)
