@@ -39,6 +39,7 @@ export const loginUserFallback = ({ email, password }) => {
     throw new Error('Invalid email or password')
   }
 
+  user.lastLoginAt = new Date().toISOString()
   return user
 }
 

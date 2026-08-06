@@ -76,6 +76,9 @@ export const login = async (req, res) => {
       if (!isMatch) {
         return res.status(400).json({ message: 'Invalid email or password' })
       }
+
+      user.lastLoginAt = new Date()
+      await user.save()
     } catch (dbError) {
       user = loginUserFallback({ email, password })
     }

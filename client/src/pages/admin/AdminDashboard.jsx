@@ -52,6 +52,29 @@ export default function AdminDashboard() {
     navigate('/admin/login')
   }
 
+  const exportOwnersToCSV = () => {
+    if (!owners || owners.length === 0) return
+
+    const headers = ['Name', 'Email', 'Joined At (Date/Time)', 'Last Login At (Date/Time)']
+    const rows = owners.map(owner => [
+      owner.name || 'Unknown',
+      owner.email,
+      owner.createdAt ? new Date(owner.createdAt).toLocaleString() : '—',
+      owner.lastLoginAt ? new Date(owner.lastLoginAt).toLocaleString() : '—'
+    ])
+    
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+      + [headers.join(','), ...rows.map(e => e.map(val => `"${val.replace(/"/g, '""')}"`).join(','))].join('\n')
+      
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `all_owners_${new Date().toISOString().slice(0,10)}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div className='min-h-screen bg-[#f5f5f3]'>
       <div className='flex min-h-screen'>
@@ -138,8 +161,17 @@ export default function AdminDashboard() {
 
               {(activeTab === 'overview' || activeTab === 'owners') && (
                 <section className='mb-8 animate-in fade-in duration-150'>
-                  <h2 className='mb-4 text-lg font-bold text-gray-900 flex items-center gap-2'>
-                    <span>👥</span> All Owners
+                  <h2 className='mb-4 text-lg font-bold text-gray-900 flex items-center justify-between'>
+                    <span className='flex items-center gap-2'>
+                      <span>👥</span> All Owners
+                    </span>
+                    <button
+                      type='button'
+                      onClick={exportOwnersToCSV}
+                      className='rounded-full bg-black px-4 py-1.5 text-xs font-semibold text-white hover:bg-gray-800 transition shadow-xs'
+                    >
+                      📥 Export CSV
+                    </button>
                   </h2>
                   <div className='overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xs'>
                     <table className='min-w-full divide-y divide-gray-100 text-sm'>
@@ -147,7 +179,8 @@ export default function AdminDashboard() {
                         <tr>
                           <th className='px-4 py-3.5 text-left'>Name</th>
                           <th className='px-4 py-3.5 text-left'>Email</th>
-                          <th className='px-4 py-3.5 text-left'>Joined date</th>
+                          <th className='px-4 py-3.5 text-left'>Joined Date & Time</th>
+                          <th className='px-4 py-3.5 text-left'>Last Login</th>
                         </tr>
                       </thead>
                       <tbody className='divide-y divide-gray-100'>
@@ -155,7 +188,8 @@ export default function AdminDashboard() {
                           <tr key={owner._id || owner.email} className='hover:bg-gray-50/50 transition'>
                             <td className='px-4 py-3.5 text-gray-900 font-medium'>{owner.name || 'Unknown'}</td>
                             <td className='px-4 py-3.5 text-gray-600'>{owner.email}</td>
-                            <td className='px-4 py-3.5 text-gray-500'>{owner.createdAt ? new Date(owner.createdAt).toLocaleDateString() : '—'}</td>
+                            <td className='px-4 py-3.5 text-gray-500'>{owner.createdAt ? new Date(owner.createdAt).toLocaleString() : '—'}</td>
+                            <td className='px-4 py-3.5 text-gray-500'>{owner.lastLoginAt ? new Date(owner.lastLoginAt).toLocaleString() : '—'}</td>
                           </tr>
                         ))}
                       </tbody>

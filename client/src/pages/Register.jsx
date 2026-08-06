@@ -23,6 +23,9 @@ export default function Register() {
     try {
       await axios.post('/auth/register', form)
 
+      // Clear the form
+      setForm({ name: '', email: '', password: '' })
+
       // Registration successful
       // Redirect user to login page
       navigate('/login')

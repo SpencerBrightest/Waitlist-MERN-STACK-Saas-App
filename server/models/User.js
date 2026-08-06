@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['free', 'pro'],
     default: 'free'
+  },
+  lastLoginAt: {
+    type: Date
   }
 }, { timestamps: true })
 
