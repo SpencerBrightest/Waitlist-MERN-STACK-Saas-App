@@ -38,6 +38,9 @@ export default function Login() {
       // Save logged-in user in AuthContext
       login(payload)
 
+      // Clear the form
+      setForm({ email: '', password: '' })
+
       // Redirect to dashboard
       navigate('/dashboard')
     } catch (err) {

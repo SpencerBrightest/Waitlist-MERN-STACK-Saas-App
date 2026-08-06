@@ -19,6 +19,7 @@ export default function AdminLogin() {
       const response = await axios.post('/admin/login', form)
       const payload = response.data?.admin ? { ...response.data.admin, token: response.data.token } : { ...response.data, token: response.data?.token }
       adminLogin(payload)
+      setForm({ email: '', password: '' })
       navigate('/admin/dashboard')
     } catch (err) {
       setError('Invalid credentials')

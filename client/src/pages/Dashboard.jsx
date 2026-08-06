@@ -103,8 +103,6 @@ export default function Dashboard() {
 
   return (
     <div className='min-h-screen bg-[#f5f5f3]'>
-      <Navbar />
-
       <div className='mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-10'>
         <div className='mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
           <div>
